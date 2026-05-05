@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Цей блок примусово зафарбує фон усього сайту */
+html,
+body,
+#root {
+  background-color: #000000 !important;
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+/* Твої анімації залишаються нижче */
+/* src/index.css */
+/* Анімація повільного неонового світуння verbatim text and statuses retained. verbatim text retained. verbatim text retained. verbatim text and statuses retained. verbatim text retained. verbatim text retained. */
+@keyframes hacker-pulse {
+  0% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 5px rgba(255, 0, 60, 0.4));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 20px rgba(255, 0, 60, 0.7));
+  }
+  100% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 5px rgba(255, 0, 60, 0.4));
+  }
+}
+
+/* src/index.css */
+
+/* Анімація для фонової сітки (повільне дихання) */
+@keyframes bg-alive {
+  0% {
+    transform: scale(1);
+    filter: brightness(0.7) blur(1px);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: brightness(1.1) blur(0.5px);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(0.7) blur(1px);
+  }
+}
+
+/* Робить автопрокрутку Swiper плавною і безперервною */
+.swiper-wrapper {
+  transition-timing-function: linear !important;
+}
+
+.animate-bg-alive {
+  animation: bg-alive 12s ease-in-out infinite;
+}
+
+/* Глітч анімація для тексту */
+@keyframes glitch {
+  0% {
+    text-shadow:
+      2px 2px #ff003c,
+      -2px -2px #00f0ff;
+    transform: translate(0);
+  }
+  20% {
+    text-shadow:
+      -2px 1px #ff003c,
+      2px -1px #00f0ff;
+    transform: translate(-1px, 1px);
+  }
+  40% {
+    text-shadow:
+      2px -1px #ff003c,
+      -2px 1px #00f0ff;
+    transform: translate(1px, -1px);
+  }
+  60% {
+    text-shadow:
+      -1px -2px #ff003c,
+      1px 2px #00f0ff;
+    transform: translate(-1px, -1px);
+  }
+  80% {
+    text-shadow:
+      1px 2px #ff003c,
+      -1px -2px #00f0ff;
+    transform: translate(1px, 1px);
+  }
+  100% {
+    text-shadow:
+      2px 2px #ff003c,
+      -2px -2px #00f0ff;
+    transform: translate(0);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.animate-glitch {
+  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  /* Робимо, щоб глітч спрацьовував тільки іноді, можна додати паузу або hover */
+}
+
+/* Клас для легкого глітчу (щоб не боліли очі) */
+.glitch-hover:hover {
+  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+/* verbatim class retained. */
+.animate-hacker-pulse {
+  animation: hacker-pulse 6s ease-in-out infinite;
+}
+/* ... решта твоїх анімацій */
+
+.animate-background-shimmer {
+  animation: background-shimmer 4s ease-in-out infinite;
+}
+
+/* 3D ефекти для секції "Хто Я" */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}

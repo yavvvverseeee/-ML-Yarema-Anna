@@ -1,0 +1,111 @@
+/* src/components/TerminalWindow.css */
+.terminal {
+  width: 90%;
+  max-width: 650px;
+  background: rgba(0, 0, 0, 0.95);
+  border: 2px solid #ff0040;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 2rem;
+  box-shadow:
+    0 0 20px rgba(255, 0, 64, 0.5),
+    0 0 40px rgba(255, 0, 64, 0.3),
+    inset 0 0 30px rgba(255, 0, 64, 0.1);
+  animation: terminalGlow 3s ease-in-out infinite;
+}
+
+@keyframes terminalGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba(255, 0, 64, 0.5),
+      0 0 40px rgba(255, 0, 64, 0.3),
+      inset 0 0 30px rgba(255, 0, 64, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(255, 0, 64, 0.7),
+      0 0 60px rgba(255, 0, 64, 0.5),
+      inset 0 0 40px rgba(255, 0, 64, 0.15);
+  }
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 0, 64, 0.1);
+  border-bottom: 1px solid rgba(255, 0, 64, 0.3);
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.terminal-buttons .btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.btn.red {
+  background: #ff5f56;
+}
+.btn.yellow {
+  background: #ffbd2e;
+}
+.btn.green {
+  background: #27ca40;
+}
+
+.terminal-title {
+  margin-left: auto;
+  color: #666;
+  font-family: "Fira Code", monospace;
+  font-size: 0.8rem;
+}
+
+.terminal-body {
+  padding: 1.5rem;
+  font-family: "Fira Code", monospace;
+  font-size: 0.9rem;
+  min-height: 150px;
+}
+
+.terminal-line {
+  margin: 0.3rem 0;
+  line-height: 1.6;
+}
+
+.terminal-line.command {
+  color: #27ca40;
+}
+
+.terminal-line.output {
+  color: #ffffff;
+}
+
+.percentage {
+  color: #00d4ff;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+}
+
+.cursor {
+  color: #888;
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
