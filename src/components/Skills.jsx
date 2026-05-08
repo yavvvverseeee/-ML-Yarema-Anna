@@ -8,11 +8,11 @@ import "swiper/css/free-mode";
 const Skills = () => {
   const skillsList = [
     {
-      name: "HTML5",
+      name: "HTML",
       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg",
     },
     {
-      name: "CSS3",
+      name: "CSS",
       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg",
     },
     {

@@ -60,22 +60,33 @@ const WhyMe = () => {
       id="whyme"
       className="min-h-screen bg-black w-full flex flex-col items-center py-20 relative z-30 overflow-hidden border-t border-cyber-red/30"
     >
-      {/* Декоративна фонова сітка */}
+      {/* 1. М'яке червоне неонове світіння по центру */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyber-red/10 rounded-full blur-[120px] pointer-events-none z-0" />
+
+      {/* 2. Кібер-сітка (горизонтальні та вертикальні лінії) */}
       <div
-        className="absolute inset-0 z-0 opacity-10 pointer-events-none"
+        className="absolute inset-0 z-0 opacity-20 pointer-events-none"
         style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 49px, #ff003c 50px)",
+          backgroundImage: `
+            linear-gradient(rgba(255, 0, 60, 0.4) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 0, 60, 0.4) 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+          backgroundPosition: "center center",
         }}
       />
 
+      {/* 3. Градієнтне затемнення зверху і знизу, щоб сітка плавно зникала */}
+      <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-black via-transparent to-black" />
+
       <h2
-        className="text-4xl md:text-5xl font-bold font-mono text-cyber-red tracking-widest mb-16 text-center animate-glitch relative z-10"
+        className="text-4xl md:text-5xl font-bold font-mono text-cyber-red tracking-widest mb-16 text-center animate-glitch relative z-10 px-4"
         style={{ textShadow: "0 0 10px #ff003c, 0 0 20px #ff003c" }}
       >
         ЧОМУ Я?
       </h2>
 
+      {/* Контейнер з логами (z-10 гарантує, що він поверх сітки) */}
       <div className="w-full max-w-[900px] px-6 flex flex-col gap-4 relative z-10">
         {logs.map((log) => {
           const isExpanded = expandedLog === log.id;
@@ -83,10 +94,10 @@ const WhyMe = () => {
           return (
             <div
               key={log.id}
-              className={`w-full border-2 rounded-md overflow-hidden transition-all duration-300 ${
+              className={`w-full border-2 rounded-md overflow-hidden transition-all duration-300 backdrop-blur-sm ${
                 isExpanded
-                  ? "border-cyber-red bg-[#1a0505] shadow-[0_0_20px_rgba(255,0,60,0.2)]"
-                  : "border-cyber-red/30 bg-[#0a0a0a] hover:border-cyber-red/80"
+                  ? "border-cyber-red bg-[#1a0505]/90 shadow-[0_0_20px_rgba(255,0,60,0.3)]"
+                  : "border-cyber-red/30 bg-[#0a0a0a]/80 hover:border-cyber-red/80"
               }`}
             >
               {/* Шапка логу */}
@@ -97,12 +108,22 @@ const WhyMe = () => {
                 <div className="flex items-center gap-4">
                   {/* Індикатор-квадратик */}
                   <div
-                    className={`w-3 h-3 rounded-sm shadow-[0_0_10px_#ff003c] ${log.severity === "CRITICAL" ? "bg-cyber-red animate-pulse" : log.severity === "HIGH" ? "bg-orange-500" : "bg-yellow-500"}`}
+                    className={`w-3 h-3 rounded-sm shadow-[0_0_10px_#ff003c] ${
+                      log.severity === "CRITICAL"
+                        ? "bg-cyber-red animate-pulse"
+                        : log.severity === "HIGH"
+                          ? "bg-orange-500"
+                          : "bg-yellow-500"
+                    }`}
                   />
 
                   {/* Заголовок */}
                   <span
-                    className={`font-mono font-bold text-sm md:text-base tracking-widest transition-colors ${isExpanded ? "text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]" : "text-gray-300"}`}
+                    className={`font-mono font-bold text-sm md:text-base tracking-widest transition-colors ${
+                      isExpanded
+                        ? "text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]"
+                        : "text-gray-300"
+                    }`}
                   >
                     {isExpanded ? "[-] " : "[+] "}LOG: {log.title}
                   </span>

@@ -24,14 +24,42 @@ const WhyCTF = () => {
       id="why-ctf"
       className="min-h-[80vh] bg-black w-full flex flex-col items-center py-20 relative z-30 border-t border-cyber-red/30 overflow-hidden"
     >
-      {/* М'яке блакитне світіння на фоні */}
+      {/* ================= ФОН: РАДАР CTF ================= */}
+
+      {/* 1. Блакитна координатна сітка */}
       <div
         className="absolute inset-0 z-0 opacity-20 pointer-events-none"
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 50% 50%, #00f0ff 0%, transparent 50%)",
+          backgroundImage: `
+            linear-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 240, 255, 0.15) 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+          backgroundPosition: "center center",
         }}
       />
+
+      {/* 2. Кільця радару (перехрестя) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] border border-cyan-500/20 rounded-full z-0 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] md:w-[250px] md:h-[250px] border border-cyan-500/10 rounded-full z-0 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[1px] bg-cyan-500/10 z-0 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-[100vh] bg-cyan-500/10 z-0 pointer-events-none" />
+
+      {/* 3. Анімований промінь сканера, що крутиться */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] md:w-[1500px] md:h-[1500px] rounded-full z-0 pointer-events-none opacity-40 origin-center"
+        style={{
+          background:
+            "conic-gradient(from 0deg, transparent 70%, rgba(0, 240, 255, 0.3) 98%, rgba(0, 240, 255, 0.8) 100%)",
+        }}
+      />
+
+      {/* 4. Затемнення по краях (Віньєтка), щоб радар плавно зникав у темряву */}
+      <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_10%,#000000_80%)]" />
+
+      {/* ==================================================== */}
 
       <h2
         className="text-4xl md:text-5xl font-bold font-mono text-cyan-400 tracking-widest mb-16 text-center animate-glitch relative z-10"
@@ -45,7 +73,7 @@ const WhyCTF = () => {
 
       <div className="w-full max-w-[900px] px-6 relative z-10">
         {/* ГОЛОВНИЙ ТЕРМІНАЛ */}
-        <div className="border border-cyan-500/50 bg-[#050505]/95 backdrop-blur-md shadow-[0_0_30px_rgba(0,255,255,0.1)] rounded-lg overflow-hidden relative">
+        <div className="border border-cyan-500/50 bg-[#050505]/80 backdrop-blur-md shadow-[0_0_30px_rgba(0,255,255,0.1)] rounded-lg overflow-hidden relative">
           {/* Шапка терміналу (Декор) */}
           <div className="bg-[#0a1520] border-b border-cyan-500/30 px-4 py-3 flex justify-between items-center">
             <div className="flex items-center gap-3">

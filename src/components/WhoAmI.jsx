@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import frontImg from "../assets/hacker1.png";
 import backImg from "../assets/anna-photo.png";
+
 // ==========================================
 // 1. АНІМАЦІЯ ДОЩУ З ТЕКСТУ (MATRIX RAIN)
 // ==========================================
@@ -12,13 +13,33 @@ const MatrixRain = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
+    const parent = canvas.parentElement; // Беремо секцію, в якій лежить canvas
+
+    let drops = [];
+    let columns = 0;
+    const columnWidth = 240;
+    const fontSize = 16;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
-      canvas.height = canvas.parentElement.clientHeight;
+      // ФІКС: Тепер висота береться динамічно. Якщо термінал розсунув секцію — canvas тягнеться за ним!
+      canvas.height = parent.scrollHeight;
+
+      const newColumns = Math.max(Math.floor(canvas.width / columnWidth), 1);
+      if (newColumns > columns) {
+        // Додаємо нові краплі, якщо екран став ширшим
+        for (let x = columns; x < newColumns; x++)
+          drops[x] = Math.random() * -50;
+        columns = newColumns;
+      }
     };
-    resizeCanvas();
+
+    // ФІКС: ResizeObserver автоматично викликає resizeCanvas(), коли змінюється висота сторінки
+    const observer = new ResizeObserver(() => resizeCanvas());
+    if (parent) observer.observe(parent);
+
     window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
     const phrases = [
       "CTF 2026 KING OF THE HILL",
@@ -29,13 +50,6 @@ const MatrixRain = () => {
       "ACCESS_GRANTED",
       "SYSTEM_OVERRIDE",
     ];
-
-    const fontSize = 16;
-    const columnWidth = 240;
-    const columns = Math.max(Math.floor(canvas.width / columnWidth), 1);
-    const drops = [];
-
-    for (let x = 0; x < columns; x++) drops[x] = Math.random() * -50;
 
     const draw = () => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
@@ -60,6 +74,7 @@ const MatrixRain = () => {
     return () => {
       clearInterval(interval);
       window.removeEventListener("resize", resizeCanvas);
+      if (parent) observer.unobserve(parent); // Вимикаємо спостерігач при виході
     };
   }, []);
 
@@ -109,13 +124,6 @@ const WhoAmI = () => {
 
   const terminalRef = useRef(null);
 
-  // Автоскрол
-  useEffect(() => {
-    if (terminalRef.current && isLogExpanded) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-    }
-  });
-
   // Анімація MATCH FOUND
   useEffect(() => {
     let t1, t2, t3, t4;
@@ -144,18 +152,8 @@ const WhoAmI = () => {
       id="whoami"
       className="min-h-screen bg-black w-full flex flex-col items-center py-20 relative z-30 border-t border-cyber-red/30 overflow-hidden"
     >
-      {/* Декоративна сітка на фоні */}
       <MatrixRain />
 
-      {/* Стилі для кастомного скролу терміналу */}
-      <style>{`
-        .terminal-scroll::-webkit-scrollbar { width: 6px; }
-        .terminal-scroll::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
-        .terminal-scroll::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 3px; }
-        .terminal-scroll::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 255, 0.6); }
-      `}</style>
-
-      {/* Головний заголовок секції */}
       <h2
         className="text-4xl md:text-5xl font-bold font-mono text-white tracking-widest mb-16 text-center animate-glitch relative z-10"
         style={{ textShadow: "0 0 10px #ff003c, 0 0 20px #ff003c" }}
@@ -176,7 +174,7 @@ const WhoAmI = () => {
             style={{ transformStyle: "preserve-3d" }}
             className="w-full h-full relative"
           >
-            {/* ПЕРЕДНЯ СТОРОНА (ЧЕРВОНА - NOT RECOGNIZED) */}
+            {/* ПЕРЕДНЯ СТОРОНА (ЧЕРВОНА) */}
             <div
               className="absolute inset-0 bg-[#0a0a0a] rounded-2xl border-2 border-cyber-red shadow-[0_0_30px_rgba(255,0,60,0.3)] overflow-hidden flex flex-col items-center"
               style={{ backfaceVisibility: "hidden" }}
@@ -203,7 +201,7 @@ const WhoAmI = () => {
               </div>
             </div>
 
-            {/* ЗАДНЯ СТОРОНА (СИНЯ - IDENTIFIED) */}
+            {/* ЗАДНЯ СТОРОНА (СИНЯ) */}
             <div
               className="absolute inset-0 bg-[#050505] rounded-2xl border-2 border-cyan-500 shadow-[0_0_30px_rgba(0,255,255,0.4)] overflow-hidden flex flex-col items-center justify-end pb-8"
               style={{
@@ -211,27 +209,20 @@ const WhoAmI = () => {
                 transform: "rotateY(180deg)",
               }}
             >
-              {/* ФІКС: Збільшили opacity до 85%, щоб фото просвічувало менше */}
               <img
                 src={backImg}
                 alt="Anna"
                 className="absolute inset-0 w-full h-full object-cover opacity-85"
               />
-
-              {/* ФІКС: Зменшили початковий рівень затемнення градієнта до /70 */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-0" />
 
               <div className="relative z-10 flex flex-col items-center">
-                {/* ПРИБРАЛИ СТАРУ ГАЛОЧКУ В КОЛІ */}
-
                 <h3
                   className="text-cyan-500 font-bold font-mono text-2xl tracking-widest mb-1"
                   style={{ textShadow: "0 0 10px rgba(0, 240, 255, 0.8)" }}
                 >
                   IDENTIFIED
                 </h3>
-
-                {/* ФІКС: ГАЛОЧКА ТЕПЕР ТУТ, ПОРУЧ ІЗ ІМЕНЕМ В ОДИН РЯДОК */}
                 <div className="flex items-center gap-2 text-white font-mono text-lg tracking-wider">
                   <p>Anna</p>
                   <svg
@@ -254,10 +245,12 @@ const WhoAmI = () => {
         </div>
 
         {/* ТЕРМІНАЛ */}
-        <div
-          className={`w-full max-w-[850px] flex-1 h-[450px] lg:h-[500px] bg-[#0a0a0a]/90 backdrop-blur-md rounded-lg border-2 flex flex-col shadow-[0_0_20px_rgba(255,0,60,0.1)] transition-colors duration-700 overflow-hidden ${isFlipped ? "border-cyan-500/50" : "border-cyber-red/50"}`}
+        <motion.div
+          layout
+          className={`w-full max-w-[850px] flex-1 min-h-[350px] lg:min-h-[390px] h-auto bg-[#0a0a0a]/90 backdrop-blur-md rounded-lg border-2 flex flex-col shadow-[0_0_20px_rgba(255,0,60,0.1)] transition-colors duration-700 overflow-hidden ${isFlipped ? "border-cyan-500/50" : "border-cyber-red/50"}`}
         >
-          <div
+          <motion.div
+            layout
             className={`flex-shrink-0 flex items-center justify-between px-4 py-3 border-b transition-colors duration-700 bg-[#1a0505] ${isFlipped ? "border-cyan-500/30" : "border-cyber-red/30"}`}
           >
             <div className="flex gap-2">
@@ -269,11 +262,12 @@ const WhoAmI = () => {
               terminal - whoami
             </span>
             <div className="w-12"></div>
-          </div>
+          </motion.div>
 
-          <div
+          <motion.div
+            layout
             ref={terminalRef}
-            className="p-6 font-mono text-sm space-y-4 flex-1 overflow-y-auto terminal-scroll relative scroll-smooth"
+            className="p-6 font-mono text-sm space-y-4 flex-1 relative"
           >
             {step === 0 && (
               <p className="text-gray-500">
@@ -321,7 +315,7 @@ const WhoAmI = () => {
             )}
 
             {step >= 5 && (
-              <div className="mt-6">
+              <motion.div layout className="mt-6">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -345,8 +339,8 @@ const WhoAmI = () => {
                       <p className="text-cyan-500/80 uppercase text-xs mb-2 tracking-widest">
                         <TerminalTyping
                           text="[ FILE: motivation_core.txt ]"
-                          delay={0}
-                          speed={10}
+                          delay={0.5}
+                          speed={2}
                         />
                       </p>
                       <p>
@@ -401,12 +395,12 @@ const WhoAmI = () => {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
             )}
 
             <div className="w-2 h-4 bg-white animate-pulse mt-4 inline-block" />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
