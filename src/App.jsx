@@ -7,6 +7,7 @@ import WhyMe from "./components/WhyMe";
 import WhyCTF from "./components/WhyCTF";
 import Skills from "./components/Skills";
 import Answers from "./components/Answers";
+import MotivationVideo from "./components/MotivationVideo";
 
 import heroBg from "./assets/hero-bg.svg";
 import hackerImg from "./assets/hacker.png";
@@ -65,7 +66,7 @@ function App() {
           <h1 className="text-left text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
             <TypewriterText
               text="CONQUERING THE DIGITAL PEAK."
-              speed={20}
+              speed={40}
               onComplete={() => setStep(1)}
             />
           </h1>
@@ -73,7 +74,7 @@ function App() {
             {step >= 1 && (
               <TypewriterText
                 text="JOINING THE CORE TEAM."
-                speed={20}
+                speed={40}
                 delay={0.1}
               />
             )}
@@ -156,29 +157,29 @@ function App() {
                         root@best-lviv:~#{" "}
                         <TypewriterText
                           text="./run_motivation.sh"
-                          speed={15}
-                          delay={0.2}
+                          speed={30}
+                          delay={0.5}
                         />
                       </p>
                       <p className="text-cyber-red font-bold mt-4">
                         <TypewriterText
                           text="> INITIATING SYSTEM BREACH..."
-                          speed={20}
-                          delay={0.6}
+                          speed={35}
+                          delay={1.0}
                         />
                       </p>
                       <p className="text-cyber-red mt-2">
                         <TypewriterText
                           text="> BYPASSING PZ-12 SECURE NODE... 100%"
-                          speed={15}
-                          delay={1}
+                          speed={30}
+                          delay={2.3}
                         />
                       </p>
                       <p className="text-white font-bold mt-4 border-l-2 border-cyber-red pl-3 bg-cyber-red/5 py-1">
                         <TypewriterText
                           text="> STATUS: SUCCESS. PROFILE LOADED: ANNA."
-                          speed={15}
-                          delay={1.5}
+                          speed={20}
+                          delay={3.9}
                         />
                       </p>
 
@@ -186,8 +187,8 @@ function App() {
                         <p className="text-cyan-400 font-bold mb-3 text-xs md:text-sm uppercase tracking-[0.2em] drop-shadow-md">
                           <TypewriterText
                             text="[ INCOMING SECURE MESSAGE // DECRYPTED ]"
-                            speed={15}
-                            delay={2.5}
+                            speed={30}
+                            delay={4.8}
                           />
                         </p>
                         <p
@@ -198,8 +199,8 @@ function App() {
                         >
                           <TypewriterText
                             text="Хейкааа, Юра! Мене звати Аня, і це моя мотивашка на посаду IT responsible CTF-у, через яку я хочу показати не тільки свої технічні скіли, а й те, як я відчуваю цей івент і яку атмосферу хочу в нього принести."
-                            speed={15}
-                            delay={3.5}
+                            speed={30}
+                            delay={6.4}
                           />
                           <span className="w-2.5 h-4 bg-white animate-pulse inline-block ml-1 align-middle" />
                         </p>
@@ -218,6 +219,7 @@ function App() {
       <WhyCTF />
       <Skills />
       <Answers />
+      <MotivationVideo />
     </div>
   );
 }

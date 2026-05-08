@@ -68,7 +68,8 @@ const Skills = () => {
         SKILLS
       </h2>
 
-      <div className="w-full relative z-10">
+      {/* ФІКС: Контейнер, який відцентрує Свайпер на великих екранах */}
+      <div className="w-full flex justify-center relative z-10">
         <Swiper
           modules={[Autoplay, FreeMode]}
           spaceBetween={30}
@@ -81,8 +82,8 @@ const Skills = () => {
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
           }}
-          // ОСЬ ТУТ ФІКС: py-10 додає простір зверху і знизу ВСРЕДИНІ свайпера, щоб тінь не обрізалась
-          className="w-full py-10 px-4"
+          // ФІКС: max-w-[1200px] обмежує його ширину, а mx-auto ставить по центру
+          className="w-full max-w-[1200px] mx-auto py-10 px-4"
         >
           {skillsList.map((skill, index) => (
             <SwiperSlide key={index} className="!w-auto">
@@ -91,7 +92,9 @@ const Skills = () => {
                 <img
                   src={skill.icon}
                   alt={skill.name}
-                  className={`w-16 h-16 object-contain group-hover:scale-110 transition-transform duration-300 ${skill.invert ? "invert" : ""}`}
+                  className={`w-16 h-16 object-contain group-hover:scale-110 transition-transform duration-300 ${
+                    skill.invert ? "invert" : ""
+                  }`}
                 />
 
                 <span className="text-white font-mono font-bold tracking-widest text-sm drop-shadow-md">

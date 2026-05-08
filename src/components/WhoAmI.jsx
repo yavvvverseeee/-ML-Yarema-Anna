@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import frontImg from "../assets/hacker1.png";
 import backImg from "../assets/anna-photo.png";
+// ФІКС: Імпортуємо дитяче фото для пасхалки!
+import childImg from "../assets/child.jpg";
 
 // ==========================================
 // 1. АНІМАЦІЯ ДОЩУ З ТЕКСТУ (MATRIX RAIN)
@@ -13,7 +15,7 @@ const MatrixRain = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    const parent = canvas.parentElement; // Беремо секцію, в якій лежить canvas
+    const parent = canvas.parentElement;
 
     let drops = [];
     let columns = 0;
@@ -22,19 +24,16 @@ const MatrixRain = () => {
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
-      // ФІКС: Тепер висота береться динамічно. Якщо термінал розсунув секцію — canvas тягнеться за ним!
       canvas.height = parent.scrollHeight;
 
       const newColumns = Math.max(Math.floor(canvas.width / columnWidth), 1);
       if (newColumns > columns) {
-        // Додаємо нові краплі, якщо екран став ширшим
         for (let x = columns; x < newColumns; x++)
           drops[x] = Math.random() * -50;
         columns = newColumns;
       }
     };
 
-    // ФІКС: ResizeObserver автоматично викликає resizeCanvas(), коли змінюється висота сторінки
     const observer = new ResizeObserver(() => resizeCanvas());
     if (parent) observer.observe(parent);
 
@@ -74,7 +73,7 @@ const MatrixRain = () => {
     return () => {
       clearInterval(interval);
       window.removeEventListener("resize", resizeCanvas);
-      if (parent) observer.unobserve(parent); // Вимикаємо спостерігач при виході
+      if (parent) observer.unobserve(parent);
     };
   }, []);
 
@@ -121,10 +120,11 @@ const WhoAmI = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [step, setStep] = useState(0);
   const [isLogExpanded, setIsLogExpanded] = useState(false);
+  // ФІКС: Додаємо стан для пасхалки
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
 
   const terminalRef = useRef(null);
 
-  // Анімація MATCH FOUND
   useEffect(() => {
     let t1, t2, t3, t4;
 
@@ -137,6 +137,7 @@ const WhoAmI = () => {
     } else {
       setStep(0);
       setIsLogExpanded(false);
+      setShowEasterEgg(false); // Закриваємо пасхалку, якщо перегортаємо картку назад
     }
 
     return () => {
@@ -253,10 +254,24 @@ const WhoAmI = () => {
             layout
             className={`flex-shrink-0 flex items-center justify-between px-4 py-3 border-b transition-colors duration-700 bg-[#1a0505] ${isFlipped ? "border-cyan-500/30" : "border-cyber-red/30"}`}
           >
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
               <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-              <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
+
+              {/* ФІКС: Анімована зелена кнопочка для пасхалки */}
+              <motion.div
+                onClick={() => setShowEasterEgg(true)}
+                animate={{
+                  boxShadow: [
+                    "0 0 0px transparent",
+                    "0 0 10px #27c93f",
+                    "0 0 0px transparent",
+                  ],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-3 h-3 rounded-full bg-[#27c93f] cursor-pointer hover:scale-125 transition-transform"
+                title="Secret Log"
+              />
             </div>
             <span className="text-gray-400 font-mono text-xs">
               terminal - whoami
@@ -269,6 +284,38 @@ const WhoAmI = () => {
             ref={terminalRef}
             className="p-6 font-mono text-sm space-y-4 flex-1 relative"
           >
+            {/* ФІКС: Вікно пасхалки (поверх тексту терміналу) */}
+            <AnimatePresence>
+              {showEasterEgg && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0 z-50 bg-[#050505]/95 backdrop-blur-md flex flex-col items-center justify-center p-4 cursor-pointer"
+                  onClick={() => setShowEasterEgg(false)} // Закриваємо при кліку на фон
+                >
+                  {/* ФІКС: Зменшили внутрішні відступи (p-4 md:p-6) */}
+                  <div className="border border-[#27c93f]/50 p-4 md:p-6 rounded-lg shadow-[0_0_30px_rgba(39,201,63,0.15)] flex flex-col items-center max-w-[90%] bg-black/50">
+                    <h3 className="text-[#27c93f] font-mono font-bold mb-3 md:mb-4 tracking-[0.1em] md:tracking-[0.2em] uppercase text-center text-xs md:text-sm animate-pulse">
+                      [ SECRET UNLOCKED: EARLY DEV STAGE ]
+                    </h3>
+
+                    <img
+                      src={childImg}
+                      alt="Mini Anna"
+                      // ФІКС: Зменшили максимальну висоту фото, щоб воно гарантовано влізло в термінал
+                      className="w-auto max-h-[140px] md:max-h-[200px] object-contain rounded border-2 border-[#27c93f]/30 shadow-[0_0_20px_rgba(39,201,63,0.2)] mb-3 md:mb-4 hover:scale-105 transition-transform duration-500"
+                    />
+
+                    <p className="text-gray-500 text-[10px] md:text-xs font-mono animate-pulse">
+                      &gt; Click anywhere to close process...
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {step === 0 && (
               <p className="text-gray-500">
                 Waiting for identity verification...
@@ -316,17 +363,48 @@ const WhoAmI = () => {
 
             {step >= 5 && (
               <motion.div layout className="mt-6">
-                <button
+                <motion.button
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsLogExpanded(!isLogExpanded);
                   }}
-                  className="text-cyber-red hover:text-cyan-400 font-bold tracking-[0.2em] text-xs transition-colors cursor-pointer flex items-center gap-2"
+                  animate={
+                    !isLogExpanded
+                      ? {
+                          opacity: [0.6, 1, 0.6],
+                          textShadow: [
+                            "0 0 0px transparent",
+                            "0 0 10px rgba(0, 240, 255, 0.8)",
+                            "0 0 0px transparent",
+                          ],
+                          boxShadow: [
+                            "0 0 0px transparent",
+                            "inset 0 0 15px rgba(0, 240, 255, 0.2), 0 0 10px rgba(0, 240, 255, 0.1)",
+                            "0 0 0px transparent",
+                          ],
+                        }
+                      : { opacity: 0.7, textShadow: "none", boxShadow: "none" }
+                  }
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className={`font-bold tracking-[0.2em] text-xs transition-all cursor-pointer flex items-center gap-2 px-4 py-2 border rounded-sm ${
+                    isLogExpanded
+                      ? "text-cyber-red border-cyber-red/30 hover:text-white"
+                      : "text-cyan-400 border-cyan-500/50 bg-cyan-900/10 hover:bg-cyan-400/20 hover:text-white hover:border-cyan-300"
+                  }`}
                 >
-                  {isLogExpanded
-                    ? "[-] CLOSE DETAILED LOG"
-                    : "[+] DECRYPT BACKGROUND STORY"}
-                </button>
+                  <span className={!isLogExpanded ? "animate-pulse" : ""}>
+                    {isLogExpanded ? "[-]" : "[+]"}
+                  </span>
+                  <span>
+                    {isLogExpanded
+                      ? "CLOSE DETAILED LOG"
+                      : "DECRYPT BACKGROUND STORY"}
+                  </span>
+                </motion.button>
 
                 <AnimatePresence>
                   {isLogExpanded && (
@@ -339,57 +417,57 @@ const WhoAmI = () => {
                       <p className="text-cyan-500/80 uppercase text-xs mb-2 tracking-widest">
                         <TerminalTyping
                           text="[ FILE: motivation_core.txt ]"
-                          delay={0.5}
-                          speed={2}
+                          delay={0.2}
+                          speed={1.5}
                         />
                       </p>
                       <p>
                         <TerminalTyping
                           text="> Якщо чесно, моя історія з IT почалась ще задовго до того, як я зрозуміла, що це таке. Вже в дитинстві мене цікавило, як працюють речі навколо — техніка, комп’ютери і все, що можна було “покрутити і розібрати”. У 2-му класі я вперше відчула, що хочу пов’язати життя з IT, а в 4-му на Scratch це переросло в реальний інтерес."
                           delay={0.5}
-                          speed={5}
+                          speed={7}
                         />
                       </p>
                       <p>
                         <TerminalTyping
                           text="> Далі все розвивалось послідовно: у 9 класі я почала вивчати Python, у 10-му пройшла курс з веб-розробки (HTML/CSS). Вступивши на ПЗ, я вивчила C/C++, а потрапивши в BEST, остаточно зрозуміла, що хочу розвиватися тут як айтівиця."
-                          delay={2.3}
-                          speed={5}
+                          delay={2.5}
+                          speed={7}
                         />
                       </p>
                       <p>
                         <TerminalTyping
                           text="> Розуміючи, що моїх знань недостатньо для крутих проєктів BEST-у, я почала вивчати React, Tailwind, Next.js, Redux, БД та Telegram-боти. В процесі я зрозуміла: мне важливо не просто “щоб працювало”, а щоб це виглядало вау, було живим і мало свій стиль."
-                          delay={3.7}
-                          speed={5}
+                          delay={3.9}
+                          speed={6}
                         />
                       </p>
                       <p>
                         <TerminalTyping
                           text="> У роботі я стараюся спочатку глибоко розібратись у задачі. У команді я проактивна: люблю структурувати роботу і покращувати те, що вже є. Під час самого івенту готова максимально допомагати кортімі з будь-якими задачами на 100%."
-                          delay={5.2}
-                          speed={5}
+                          delay={5.4}
+                          speed={7}
                         />
                       </p>
                       <p>
                         <TerminalTyping
                           text="> Фідбек я сприймаю як інструмент для росту, якщо він конструктивний. Дуже ціную командну взаємодію, бо результат будується разом."
-                          delay={6.6}
-                          speed={5}
+                          delay={6.9}
+                          speed={7}
                         />
                       </p>
                       <p>
                         <TerminalTyping
                           text="> Окремо я проходила KT у Олексія Татарчинського, який пояснив загальну роль IT responsible, та у Лізи Ясіньської, яка детально розклала мої обов’язки в команді CTF. Це мене не налякало, а навпаки — змотивувало зробити цей CTF справді незабутнім."
-                          delay={7.5}
-                          speed={5}
+                          delay={7.9}
+                          speed={7}
                         />
                       </p>
                       <p className="text-cyan-500 font-bold mt-4">
                         <TerminalTyping
                           text="> END OF FILE."
-                          delay={9.2}
-                          speed={20}
+                          delay={9.5}
+                          speed={15}
                         />
                       </p>
                     </motion.div>
