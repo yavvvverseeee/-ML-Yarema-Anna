@@ -7,7 +7,7 @@ import WhyMe from "./components/WhyMe";
 import WhyCTF from "./components/WhyCTF";
 import Skills from "./components/Skills";
 import Answers from "./components/Answers";
-import MotivationVideo from "./components/MotivationVideo";
+
 
 import heroBg from "./assets/hero-bg.svg";
 import hackerImg from "./assets/hacker.png";
@@ -219,7 +219,7 @@ function App() {
       <WhyCTF />
       <Skills />
       <Answers />
-      <MotivationVideo />
+     
     </div>
   );
 }
