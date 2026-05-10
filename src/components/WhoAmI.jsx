@@ -459,7 +459,7 @@ const WhoAmI = () => {
                       <p className="text-cyan-500 font-bold mt-4">
                         <TerminalTyping
                           text="> END OF FILE."
-                          delay={14.5}
+                          delay={16.0}
                           speed={15}
                         />
                       </p>
