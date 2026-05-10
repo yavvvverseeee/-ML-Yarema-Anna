@@ -120,7 +120,6 @@ const WhoAmI = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [step, setStep] = useState(0);
   const [isLogExpanded, setIsLogExpanded] = useState(false);
-  // ФІКС: Додаємо стан для пасхалки
   const [showEasterEgg, setShowEasterEgg] = useState(false);
 
   const terminalRef = useRef(null);
@@ -284,38 +283,6 @@ const WhoAmI = () => {
             ref={terminalRef}
             className="p-6 font-mono text-sm space-y-4 flex-1 relative"
           >
-            {/* ФІКС: Вікно пасхалки (поверх тексту терміналу) */}
-            <AnimatePresence>
-              {showEasterEgg && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute inset-0 z-50 bg-[#050505]/95 backdrop-blur-md flex flex-col items-center justify-center p-4 cursor-pointer"
-                  onClick={() => setShowEasterEgg(false)} // Закриваємо при кліку на фон
-                >
-                  {/* ФІКС: Зменшили внутрішні відступи (p-4 md:p-6) */}
-                  <div className="border border-[#27c93f]/50 p-4 md:p-6 rounded-lg shadow-[0_0_30px_rgba(39,201,63,0.15)] flex flex-col items-center max-w-[90%] bg-black/50">
-                    <h3 className="text-[#27c93f] font-mono font-bold mb-3 md:mb-4 tracking-[0.1em] md:tracking-[0.2em] uppercase text-center text-xs md:text-sm animate-pulse">
-                      [ SECRET UNLOCKED: EARLY DEV STAGE ]
-                    </h3>
-
-                    <img
-                      src={childImg}
-                      alt="Mini Anna"
-                      // ФІКС: Зменшили максимальну висоту фото, щоб воно гарантовано влізло в термінал
-                      className="w-auto max-h-[140px] md:max-h-[200px] object-contain rounded border-2 border-[#27c93f]/30 shadow-[0_0_20px_rgba(39,201,63,0.2)] mb-3 md:mb-4 hover:scale-105 transition-transform duration-500"
-                    />
-
-                    <p className="text-gray-500 text-[10px] md:text-xs font-mono animate-pulse">
-                      &gt; Click anywhere to close process...
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
             {step === 0 && (
               <p className="text-gray-500">
                 Waiting for identity verification...
@@ -363,37 +330,15 @@ const WhoAmI = () => {
 
             {step >= 5 && (
               <motion.div layout className="mt-6">
-                <motion.button
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsLogExpanded(!isLogExpanded);
                   }}
-                  animate={
-                    !isLogExpanded
-                      ? {
-                          opacity: [0.6, 1, 0.6],
-                          textShadow: [
-                            "0 0 0px transparent",
-                            "0 0 10px rgba(0, 240, 255, 0.8)",
-                            "0 0 0px transparent",
-                          ],
-                          boxShadow: [
-                            "0 0 0px transparent",
-                            "inset 0 0 15px rgba(0, 240, 255, 0.2), 0 0 10px rgba(0, 240, 255, 0.1)",
-                            "0 0 0px transparent",
-                          ],
-                        }
-                      : { opacity: 0.7, textShadow: "none", boxShadow: "none" }
-                  }
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
                   className={`font-bold tracking-[0.2em] text-xs transition-all cursor-pointer flex items-center gap-2 px-4 py-2 border rounded-sm ${
                     isLogExpanded
-                      ? "text-cyber-red border-cyber-red/30 hover:text-white"
-                      : "text-cyan-400 border-cyan-500/50 bg-cyan-900/10 hover:bg-cyan-400/20 hover:text-white hover:border-cyan-300"
+                      ? "text-cyber-red border-cyber-red/30 hover:text-white opacity-70"
+                      : "text-cyan-400 border-cyan-500/50 bg-cyan-900/10 hover:bg-cyan-400/20 hover:text-white hover:border-cyan-300 hover:shadow-[0_0_15px_rgba(0,255,255,0.3)]"
                   }`}
                 >
                   <span className={!isLogExpanded ? "animate-pulse" : ""}>
@@ -404,7 +349,7 @@ const WhoAmI = () => {
                       ? "CLOSE DETAILED LOG"
                       : "DECRYPT BACKGROUND STORY"}
                   </span>
-                </motion.button>
+                </button>
 
                 <AnimatePresence>
                   {isLogExpanded && (
@@ -473,6 +418,36 @@ const WhoAmI = () => {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* ФІКС: ПАСХАЛКА ВИНЕСЕНА СЮДИ, ПОВЕРХ УСІЄЇ СЕКЦІЇ */}
+      <AnimatePresence>
+        {showEasterEgg && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[100] bg-[#050505]/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 cursor-pointer"
+            onClick={() => setShowEasterEgg(false)}
+          >
+            <div className="border border-[#27c93f]/50 p-6 md:p-8 rounded-lg shadow-[0_0_30px_rgba(39,201,63,0.15)] flex flex-col items-center max-w-[90%] md:max-w-xl bg-black/80">
+              <h3 className="text-[#27c93f] font-mono font-bold mb-4 md:mb-6 tracking-[0.1em] md:tracking-[0.2em] uppercase text-center text-sm md:text-lg animate-pulse">
+                [ SECRET UNLOCKED: EARLY DEV STAGE ]
+              </h3>
+
+              <img
+                src={childImg}
+                alt="Mini Anna"
+                className="w-auto max-h-[50vh] md:max-h-[60vh] object-contain rounded border-2 border-[#27c93f]/30 shadow-[0_0_20px_rgba(39,201,63,0.2)] mb-4 md:mb-6 hover:scale-105 transition-transform duration-500"
+              />
+
+              <p className="text-gray-400 text-xs md:text-sm font-mono animate-pulse">
+                &gt; Click anywhere to close process...
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
