@@ -199,7 +199,7 @@ function App() {
                         >
                           <TypewriterText
                             text="Хейкааа, Юра! Мене звати Аня, і це моя мотивашка на посаду IT responsible CTF-у, через яку я хочу показати не тільки свої технічні скіли, а й те, як я відчуваю цей івент і яку атмосферу хочу в нього принести."
-                            speed={30}
+                            speed={25}
                             delay={6.4}
                           />
                           <span className="w-2.5 h-4 bg-white animate-pulse inline-block ml-1 align-middle" />
