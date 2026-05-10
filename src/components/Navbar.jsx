@@ -13,7 +13,7 @@ const Navbar = () => {
     "why-ctf",
     "skills",
     "answers",
-    "video",
+    
   ];
 
   useEffect(() => {
