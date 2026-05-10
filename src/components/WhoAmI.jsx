@@ -427,7 +427,8 @@ const WhoAmI = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[100] bg-[#050505]/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 cursor-pointer"
+            // ТУТ ФІКС: Змінили z-[100] на z-[999] та bg-[#050505]/90 на bg-black/95
+            className="fixed inset-0 z-[999] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-4 cursor-pointer"
             onClick={() => setShowEasterEgg(false)}
           >
             <div className="border border-[#27c93f]/50 p-6 md:p-8 rounded-lg shadow-[0_0_30px_rgba(39,201,63,0.15)] flex flex-col items-center max-w-[90%] md:max-w-xl bg-black/80">
